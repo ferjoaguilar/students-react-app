@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Geomini:wght@200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root{
+  --primary-color: #050E3C;
+  --secondary-color: #002455; 
+  --accent-color: #DC0000;
+}
+
+body{
+  margin: 0;
+  padding-top: 64px;
+}
