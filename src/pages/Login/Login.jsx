@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form"
+import { useState } from "react"
 import Navbar from '../../components/Navbar/Navbar'
 import styles from './Login.module.css'
+import { login } from "../../services/api"
 
 
 const Login = () => {
@@ -8,9 +10,17 @@ const Login = () => {
 
     // Inicializamos react-hook-form
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
+    const [submitError, setSubmitError] = useState(null)
 
     const onSubmit = async (data) => {
-        console.log("Login recibido", data)
+        setSubmitError(null)
+        try {
+            const result = await login(data)
+            console.log('Login exitoso', result)
+        }
+        catch (error) {
+            setSubmitError(error.message)
+        }
     }
 
     return (
@@ -54,10 +64,29 @@ const Login = () => {
                             <input
                                 type="password"
                                 id='password'
-                                className={styles.input}
-                                placeholder="••••••••"
+                                className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
+                                {...register('password', {
+                                    required: "La contraseña es obligatoria",
+                                    minLength: {
+                                        value: 8,
+                                        message: "La contraseña debe tener al menos 8 caracteres"
+                                    },
+                                    pattern: {
+                                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                        message: "Debe incluir al menos una mayúscula, una minúscula, un número y un carácter especial"
+                                    }
+                                })}
                             />
+                            {
+                                errors.password && (
+                                    <span className={styles.errorMessage}>{errors.password.message}</span>
+                                )
+                            }
                         </div>
+
+                        {
+                            submitError && <span>{submitError}</span>
+                        }
 
                         <button type='submit' className={styles.submitButton}>
                             Entrar

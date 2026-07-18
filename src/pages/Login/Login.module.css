@@ -119,3 +119,18 @@
 .link:hover {
   text-decoration: underline;
 }
+
+.errorMessage{
+    color: red;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.inputError{
+    border: 2px solid red;
+}
+
+.inputError:focus{
+    border: 1px solid red;
+    box-shadow: 0 0 0 1px rgb(255, 54, 54);
+}

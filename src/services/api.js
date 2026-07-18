@@ -24,3 +24,8 @@ export const createAccount = async (studentData) => {
     const response = await api.post('/create', studentData)
     return response.data
 }
+
+export const login = async (credentials) => {
+    const response = await api.post('/auth/login', credentials)
+    return response.data
+}
