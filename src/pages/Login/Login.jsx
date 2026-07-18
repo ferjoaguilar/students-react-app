@@ -1,7 +1,18 @@
+import { useForm } from "react-hook-form"
 import Navbar from '../../components/Navbar/Navbar'
 import styles from './Login.module.css'
 
+
 const Login = () => {
+
+
+    // Inicializamos react-hook-form
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
+
+    const onSubmit = async (data) => {
+        console.log("Login recibido", data)
+    }
+
     return (
         <>
             <Navbar />
@@ -12,16 +23,30 @@ const Login = () => {
                         <p className={styles.subtitle}>Ingresa tus credenciales para acceder a la plataforma</p>
                     </div>
 
-                    <form className={styles.form}>
+                    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+
                         <div className={styles.inputGroup}>
                             <label htmlFor="email" className={styles.label}>Correo Electrónico</label>
                             <input
-                                type="email"
+                                type="text"
                                 id='email'
-                                className={styles.input}
-                                placeholder="ejemplo@correo.com"
-                                required
+                                className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+                                placeholder="Escribe tu email"
+                                {...register('email', {
+                                    required: "El email es obligatorio",
+                                    validate: (value) => {
+                                        const domain = value.split('@')[1];
+                                        const allowedDomains = ['gmail.com', 'outlook.es', 'hotmail.com'];
+
+                                        return allowedDomains.includes(domain) || "Solo se aceptan correos de gmail.com, outlook.es o hotmail.com";
+                                    }
+                                })}
                             />
+                            {
+                                errors.email && (
+                                    <span className={styles.errorMessage}>{errors.email.message}</span>
+                                )
+                            }
                         </div>
 
                         <div className={styles.inputGroup}>
@@ -31,7 +56,6 @@ const Login = () => {
                                 id='password'
                                 className={styles.input}
                                 placeholder="••••••••"
-                                required
                             />
                         </div>
 
