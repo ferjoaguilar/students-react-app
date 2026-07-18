@@ -20,3 +20,7 @@ api.interceptors.response.use(
 )
 
 // CREAR LAS PETICIONES API
+export const createAccount = async (studentData) => {
+    const response = await api.post('/create', studentData)
+    return response.data
+}

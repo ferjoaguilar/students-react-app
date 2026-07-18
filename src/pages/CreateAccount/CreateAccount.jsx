@@ -1,15 +1,36 @@
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import Navbar from '../../components/Navbar/Navbar'
 import styles from './CreateAccount.module.css'
+import { createAccount } from "../../services/api"
 
 const CreateAccount = () => {
 
     // Inicializamos react-hook-form
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
+    const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
+
+    const [submitError, setSubmitError] = useState(null)
+    const [submitSuccess, setSubmitSucess] = useState(false)
+
+    // Instancia del useNavigate
+    const navigate = useNavigate()
 
     // Solo se ejectuca si TODOS los campos pasan las validaciones
-    const onSubmit = (data) => {
-        console.log('Cuenta creada', data)
+    const onSubmit = async (data) => {
+        //console.log('Cuenta creada', data)
+        setSubmitError(null)
+        setSubmitSucess(false)
+        try {
+            const result = await createAccount(data)
+            console.log("Respues de api", result)
+            setSubmitSucess(true)
+            reset()
+            navigate("/login", { replace: true })
+        }
+        catch (error) {
+            setSubmitError(error.message)
+        }
     }
 
 
@@ -220,6 +241,13 @@ const CreateAccount = () => {
                                 </span>
                             )}
                         </div>
+
+                        {
+                            submitError && <span>{submitError}</span>
+                        }
+                        {
+                            submitSuccess && <span>Cuenta creada con exito</span>
+                        }
 
                         <button type='submit' className={styles.submitButton} disabled={isSubmitting}>
                             {isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
