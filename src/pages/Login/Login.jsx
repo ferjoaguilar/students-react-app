@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import Navbar from '../../components/Navbar/Navbar'
 import styles from './Login.module.css'
 import { login } from "../../services/api"
@@ -11,12 +12,16 @@ const Login = () => {
     // Inicializamos react-hook-form
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm()
     const [submitError, setSubmitError] = useState(null)
+    const navigate = useNavigate()
 
     const onSubmit = async (data) => {
         setSubmitError(null)
         try {
             const result = await login(data)
-            console.log('Login exitoso', result)
+            //console.log('Login exitoso', result)
+            localStorage.setItem("token", result.token)
+            navigate("/dashboard", { replace: true })
+
         }
         catch (error) {
             setSubmitError(error.message)

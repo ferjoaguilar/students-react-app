@@ -29,3 +29,13 @@ export const login = async (credentials) => {
     const response = await api.post('/auth/login', credentials)
     return response.data
 }
+
+export const getSubjects = async () => {
+    const token = localStorage.getItem("token")
+    const response = await api.get("/subjects", {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    return response.data
+}
